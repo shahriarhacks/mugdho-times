@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { IoTimeSharp } from "react-icons/io5";
 import HeaderSearch from "./headerSearch";
 import Link from "next/link";
@@ -18,15 +18,23 @@ export const logo = (
 export default function DesktopHeader() {
   const [scrollPage, setScrollPage] = React.useState(false);
 
-  const fixNavbar = () => {
-    if (typeof window !== "undefined" && window.scrollY > 50) {
-      setScrollPage(true);
-    } else {
-      setScrollPage(false);
-    }
-  };
+  useEffect(() => {
+    const fixNavbar = () => {
+      if (typeof window !== "undefined" && window.scrollY > 50) {
+        setScrollPage(true);
+      } else {
+        setScrollPage(false);
+      }
+    };
 
-  window.addEventListener("scroll", fixNavbar);
+    // Adding event listener inside useEffect ensures it runs on the client side
+    window.addEventListener("scroll", fixNavbar);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", fixNavbar);
+    };
+  }, []);
 
   return (
     <div
